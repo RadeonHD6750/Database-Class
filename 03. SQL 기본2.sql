@@ -1,0 +1,290 @@
+
+
+
+SELECT e.EMP_NAME , e.SALARY
+FROM EMP e 
+WHERE e.DEPARTMENT_ID  = 60;
+
+
+-- 어디부터 어디까지
+SELECT e.EMP_NAME , e.SALARY 
+FROM EMP e
+WHERE e.DEPARTMENT_ID  = 80
+AND e.SALARY BETWEEN 8000 AND 10000;
+
+
+-- [연습문제]
+-- EMPLOYEES에서 SALARY가 2000~10000 이거나
+-- 혹은 (DEPARTMENT_ID가 80이고 
+-- MANAGER_ID가 145)인 사람 조회
+SELECT e.EMP_NAME , e.SALARY 
+, e.DEPARTMENT_ID , e.MANAGER_ID 
+FROM EMPLOYEES e 
+WHERE (e.SALARY BETWEEN 2000 AND 10000)
+OR 
+(e.DEPARTMENT_ID = 80 AND e.MANAGER_ID = 145);
+
+
+-- ANY
+SELECT e.EMP_NAME, e.SALARY
+FROM EMPLOYEES e 
+WHERE e.SALARY > ANY( 3000, 4000, 5000);
+
+SELECT e.EMP_NAME, e.SALARY
+FROM EMPLOYEES e 
+WHERE e.SALARY > ANY( 
+		SELECT a.SALARY
+		FROM EMPLOYEES a
+		WHERE a.DEPARTMENT_ID = 100
+);
+
+
+SELECT e.EMP_NAME, e.SALARY
+FROM EMPLOYEES e 
+WHERE e.SALARY > ALL( 3000, 4000, 5000);
+
+
+SELECT e.EMP_NAME, e.SALARY
+FROM EMPLOYEES e 
+WHERE e.SALARY > ALL( 
+		SELECT a.SALARY
+		FROM EMPLOYEES a
+		WHERE a.DEPARTMENT_ID = 100
+);
+
+
+
+-- IN 연산자
+-- OR 관계로 되어 있음, 나열된거 전부 검색 가능
+SELECT e.EMP_NAME , e.JOB_ID 
+FROM EMPLOYEES e 
+WHERE e.JOB_ID IN ('IT_PROG', 'FI_MGR');
+
+
+-- 숫자도 되는 IN
+SELECT e.EMP_NAME , e.SALARY 
+FROM EMPLOYEES e 
+WHERE e.SALARY IN (2000, 4000, 6000, 8000);
+
+
+-- ALL
+-- IN하고 반대로 전부 만족해야 됨
+-- 별도 연산자 필요함  문자는 불리함
+SELECT e.EMP_NAME , e.SALARY 
+FROM EMPLOYEES e 
+WHERE e.SALARY > ALL(5000, 6000, 7000);
+
+
+-- 부서 ID가 100인 모든 직원들의 급여보다 높은 급여를 받는 직원들을 찾으시오.
+SELECT *
+FROM employees
+WHERE salary > ALL 
+(
+	SELECT salary FROM employees WHERE department_id = 100
+);
+
+
+
+-- NULL 탐지
+
+-- 안되는 예
+-- 진공 상태라 비교 불가
+SELECT e.EMP_NAME , e.COMMISSION_PCT 
+FROM EMPLOYEES e 
+WHERE e.COMMISSION_PCT = NULL; 
+-- if(COMMISSION_PCT == null)
+
+
+-- NULL 전용 키워드 사용
+-- IS NULL NULL을 찾아라
+SELECT e.EMP_NAME , e.COMMISSION_PCT 
+FROM EMPLOYEES e 
+WHERE e.COMMISSION_PCT IS NULL; 
+
+
+-- IS NOT NULL
+SELECT e.EMP_NAME , e.COMMISSION_PCT 
+FROM EMPLOYEES e 
+WHERE e.COMMISSION_PCT IS NOT NULL; 
+
+
+
+
+
+
+
+-- LIKE 연산자 
+-- 문자열 다루기 특화
+
+-- 전방 일치 -- 단어 검색
+SELECT e.EMP_NAME 
+FROM EMPLOYEES e 
+WHERE e.EMP_NAME LIKE 'Al%';
+
+-- 후방일치  -- 문장 검색 (한국어 한정)
+SELECT e.EMP_NAME 
+FROM EMPLOYEES e 
+WHERE e.EMP_NAME LIKE '%en';
+
+-- 포함검색
+SELECT e.EMP_NAME 
+FROM EMPLOYEES e 
+WHERE e.EMP_NAME LIKE '%to%';
+
+
+
+INSERT INTO EMP(EMP_NAME)
+VALUES('서지민');
+
+INSERT INTO EMP(EMP_NAME)
+VALUES('홍길동');
+
+INSERT INTO EMP(EMP_NAME)
+VALUES('이기철');
+
+INSERT INTO EMP(EMP_NAME)
+VALUES('이기영');
+
+
+
+
+-- 아까 %와는 달리 _ 는 자릿수를 검사
+-- 주로 이름이나 단어 검색
+SELECT e.EMP_NAME 
+FROM EMP e
+WHERE EMP_NAME LIKE '이__';
+
+
+SELECT e.EMP_NAME 
+FROM EMP e
+WHERE EMP_NAME LIKE '_기_';
+
+SELECT e.EMP_NAME 
+FROM EMP e
+WHERE EMP_NAME LIKE '___';
+
+
+SELECT e.EMP_NAME, e.PHONE_NUMBER
+FROM EMPLOYEES e 
+WHERE e.PHONE_NUMBER LIKE '___.124.4269';
+-- 지정된 형식이 있을 때
+-- '010________'
+
+
+-- [연습문제]
+-- PRODUCTS에서
+-- PROD_NAME이 'DVD-R'으로 시작하는거 조회
+
+SELECT p.PROD_NAME 
+FROM PRODUCTS p 
+WHERE p.PROD_NAME LIKE 'DVD-R%';
+
+
+
+
+-- [연습문제]
+-- PRODUCTS에서
+-- PROD_NAME이 'PCMCIAII'이 포함되는거 조회
+SELECT p.PROD_NAME 
+FROM PRODUCTS p 
+WHERE p.PROD_NAME LIKE '%PCMCIAII%';
+
+
+
+-- [연습문제]
+-- COUNTRIES에서
+-- COUNTRY_NAME이 5글자인거 조회
+
+SELECT c.COUNTRY_NAME 
+FROM COUNTRIES c 
+WHERE c.COUNTRY_NAME LIKE '_____';
+
+
+-- [연습문제]
+-- COUNTRIES에서
+-- COUNTRY_SUBREGION이 4글자이고
+-- 가운데에 si가 들어간거 조회
+SELECT c.COUNTRY_SUBREGION 
+FROM COUNTRIES c 
+WHERE c.COUNTRY_SUBREGION LIKE '_si_';
+
+
+
+
+
+-- [연습문제]
+-- EMPLOYEES에서
+-- EMP_NAME에 's'가 포함되고
+-- COMMISSION_PCT이 없으면서
+-- JOB_ID가 'IT_PROG', 'FI_MGR' 둘중 하나인 사람
+SELECT e.EMP_NAME , e.COMMISSION_PCT, e.JOB_ID 
+FROM EMPLOYEES e 
+WHERE e.EMP_NAME LIKE '%s%'
+AND e.COMMISSION_PCT IS NULL 
+AND e.JOB_ID  IN ('IT_PROG', 'FI_MGR');
+
+
+
+
+
+-- [연습문제]
+-- EMPLOYEES에서
+-- EMP_NAME에 'e'가 포함되고
+-- MANAGER_ID가 없으면서
+SELECT e.EMP_NAME , e.MANAGER_ID, e.JOB_ID 
+FROM EMPLOYEES e 
+WHERE e.EMP_NAME LIKE '%e%'
+AND e.MANAGER_ID IS NULL;
+
+
+-----------------------------------
+-- 컬럼명을 출력시에만 개조하기
+-- ALTER TABLE 뭐 이거 아님
+
+SELECT (e.EMP_NAME || '님 안녕하세요') AS "성명" 
+FROM EMPLOYEES e ;
+
+
+
+
+-- [연습문제]
+-- EMPLOYEES에서 다음과 같이 출력하시오
+SELECT (e.EMP_NAME || '님 안녕하세요  ' 
+|| e.PHONE_NUMBER || '으로 전화주세요') AS "남긴 메세지" 
+FROM EMPLOYEES e ;
+
+
+-----------------------------------
+-- CASE 분류, 등급, 통계
+-- 방법론으로 논란
+SELECT e.EMP_NAME, e.SALARY,
+CASE 
+	WHEN SALARY < 3000 THEN 'D등급'
+	WHEN SALARY BETWEEN 3000 AND 5000 THEN 'C등급'
+	WHEN SALARY BETWEEN 5001 AND 8000 THEN 'B등급'
+	WHEN SALARY BETWEEN 8001 AND 12000 THEN 'A등급'
+	ELSE 'S등급'
+END AS salary_grade    -- 원래 있는 컬럼은 아니다
+FROM EMPLOYEES e ; 
+-- 등급이 많을 수록 귀찮아짐
+
+
+-- [연습문제]
+-- PRODUCTS에서
+-- PROD_LIST_PRICE
+-- 30미만이면 D등급
+-- 31~60 C
+-- 61~100 B
+-- 101~150 A
+-- 그외 S
+
+
+SELECT p.prod_name,
+CASE 
+	WHEN PROD_LIST_PRICE < 30 THEN 'D등급'
+	WHEN PROD_LIST_PRICE BETWEEN 31 AND 60 THEN 'C등급'
+	WHEN PROD_LIST_PRICE BETWEEN 61 AND 100 THEN 'B등급'
+	WHEN PROD_LIST_PRICE BETWEEN 101 AND 150 THEN 'A등급'
+	ELSE 'S등급'
+END AS grade    -- 원래 있는 컬럼은 아니다
+FROM PRODUCTS p ;

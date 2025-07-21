@@ -1,0 +1,213 @@
+
+
+
+-- UPDATE
+-- 기존 테이블에 있던 데이터를 수정하기
+-- 복붙하기
+-- 실험용 테이블 만들기
+CREATE TABLE EMP
+AS 
+SELECT EMPLOYEES.EMPLOYEE_ID , EMPLOYEES.EMP_NAME 
+FROM EMPLOYEES;
+
+SELECT *
+FROM EMP
+WHERE EMP_NAME = 'jimin';
+
+-- 이름 바꾸기 (동명인이 있으면 안됨)
+UPDATE EMP
+SET EMP_NAME = 'jimin'
+WHERE EMP_NAME = 'Adam Fripp';
+
+-- 이름 바꾸기 (사번으로 해야 정확하게 찝는다.)
+UPDATE EMP
+SET EMP_NAME = 'jimin'
+WHERE EMPLOYEE_ID  = 200;
+
+
+-- 컬럼 여러개 동시에 수정하기
+UPDATE EMP
+SET 
+EMP_NAME = 'KM29A1',
+EMPLOYEE_ID = 9999
+WHERE EMP_NAME = 'jimin';
+
+
+SELECT *
+FROM EMP
+WHERE EMP_NAME = 'KM29A1';
+
+
+-- EMP 실험용 테이블 만들기
+-- 숫자 다루기
+-- 연봉 인상
+DROP TABLE EMP; -- 청소 한번 시원하게
+
+-- 실험용 하나 만들기
+CREATE TABLE EMP
+AS 
+SELECT *
+FROM EMPLOYEES;
+
+
+SELECT *
+FROM EMP e ;
+
+-- 직접 대입으로 값 변경
+UPDATE EMP
+SET EMP.SALARY = 5000
+WHERE EMP.EMPLOYEE_ID = 200;
+
+SELECT e.EMP_NAME , e.SALARY
+FROM EMP e 
+WHERE e.EMPLOYEE_ID = 200;
+
+
+
+-- 산술연산으로 변경
+-- DEPARTMENT_ID가 10인 사람들의
+-- 10% 인상
+UPDATE EMP
+SET SALARY  = SALARY * 1.1
+WHERE EMP.EMPLOYEE_ID = 200;
+
+
+-- [연습문제]
+-- EMP에서
+-- DEPARTMENT_ID가 10인 사람들의
+-- SALARY를 6.7% 실제로 인상하시오
+UPDATE EMP
+SET 
+    SALARY = SALARY * 1.067
+WHERE DEPARTMENT_ID = 10;
+
+-- UPDATE
+
+-- EMP에서 EMPLOYEE_ID가 200인 사람의
+-- SALARY를 10% 삭감하시오.
+-- EMPLOYEE_ID가 200인 사람의 SALARY를 조회
+UPDATE EMP
+SET SALARY  = SALARY * 0.9
+WHERE EMP.EMPLOYEE_ID = 200;
+
+
+
+
+-- EMP에서 DEPARTMENT_ID가 60인 사람의
+-- SALARY를 6.7 % 인상하시오.
+UPDATE EMP
+SET SALARY  = SALARY * 1.067
+WHERE EMP.DEPARTMENT_ID  = 60;
+
+
+
+
+
+-- EMP에서 DEPARTMENT_ID가 80이고
+-- SALARY가 8000이상 10000 이하인 사람들을
+-- 0.3 % 인상하시오
+UPDATE EMP
+SET SALARY  = SALARY * 1.003
+WHERE EMP.DEPARTMENT_ID  = 80;
+
+
+-- EMP에서 DEPARTMENT_ID가 80인 사람들에서
+-- SALARY를 성과급COMMISSION_PCT를 곱하여 적용하시오.
+-- COMMISSION_PCT NULL체크할 것
+UPDATE EMP
+SET SALARY  = SALARY +  (SALARY * COMMISSION_PCT)
+WHERE EMP.DEPARTMENT_ID  = 80
+AND COMMISSION_PCT IS NOT NULL;
+
+
+-- [연습문제]
+-- EMP에서
+-- COMMISION_PCT가 NULL이 아니고
+-- SALARY가 2000에서 50000 사이로 받는 사람들의
+-- SALARY를 1000씩 올리시오.
+UPDATE EMP
+SET 
+      SALARY = SALARY + 1000
+WHERE SALARY BETWEEN 2000 AND 50000
+AND COMMISSION_PCT IS NOT NULL;
+
+
+
+
+
+
+
+-- ROLLBACK 시연
+-- 데이터 삭제 하기
+
+-- 삭제하기 전에 반드시 SELECT를 통하여
+-- 삭제할 데이터 점검
+SELECT EMP_NAME , SALARY, DEPARTMENT_ID
+FROM EMP
+WHERE DEPARTMENT_ID  = 80
+AND SALARY BETWEEN 8000 AND 10000;
+
+DELETE -- SELECT가 아니라 DELETE
+FROM EMP
+WHERE DEPARTMENT_ID  = 80
+AND SALARY BETWEEN 8000 AND 10000;
+
+
+SELECT *
+FROM EMP;
+
+COMMIT;
+
+SELECT *
+FROM EMP
+WHERE EMPLOYEE_ID = 200;
+
+
+COMMIT;
+-- 제니퍼 살아 있음
+
+DELETE 
+FROM EMP;
+
+
+SELECT *
+FROM EMP
+WHERE EMPLOYEE_ID = 200;
+
+
+ROLLBACK;
+-- 살린 상태
+
+
+-- 여기서 확인 한번 해주기
+SELECT *
+FROM EMP
+WHERE EMPLOYEE_ID = 201;
+
+
+-- 이야기가 어느 정도 진행된 후에 저장
+COMMIT;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

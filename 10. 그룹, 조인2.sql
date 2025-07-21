@@ -1,0 +1,226 @@
+
+-- JOIN하고 GROUP BY
+-- 부서별 평균연봉
+SELECT d.DEPARTMENT_ID , d.DEPARTMENT_NAME,
+AVG(e.SALARY) 
+FROM DEPARTMENTS d 
+INNER JOIN EMPLOYEES e 
+ON (d.DEPARTMENT_ID = e.DEPARTMENT_ID)
+GROUP BY d.DEPARTMENT_ID , d.DEPARTMENT_NAME;
+
+
+
+
+
+
+-- 직책별 사원수
+-- JOBS, EMPLOYEES
+SELECT j.JOB_ID, j.JOB_TITLE ,
+COUNT(e.EMPLOYEE_ID) 
+FROM JOBS j , EMPLOYEES e
+WHERE (j.JOB_ID = e.JOB_ID) 
+GROUP BY j.JOB_ID, j.JOB_TITLE;
+
+
+
+--01. 결합이 잘 되었는지 확인하기
+--  GROUP BY 생각 말고
+SELECT e.EMP_NAME , j.JOB_ID, j.JOB_TITLE
+FROM JOBS j
+INNER JOIN EMPLOYEES e 
+ON (j.JOB_ID = e.JOB_ID)
+
+
+
+
+
+--02. GROUP BY 생각 하기
+SELECT j.JOB_ID, j.JOB_TITLE, COUNT(e.EMPLOYEE_ID)
+FROM JOBS j
+INNER JOIN EMPLOYEES e 
+ON (j.JOB_ID = e.JOB_ID)
+GROUP BY j.JOB_ID, j.JOB_TITLE;
+
+-- LEFT할 때 어느 한쪽에서 NULL이라면
+-- 순서를 바꿀 때 문제됨
+SELECT e.EMP_NAME 
+FROM EMPLOYEES e 
+WHERE e.JOB_ID IS NULL;
+
+
+
+
+
+
+-- 부서별 사원수
+-- DEPARTMENTS, EMPLOYEES
+SELECT d.DEPARTMENT_ID ,d.DEPARTMENT_NAME ,
+COUNT(e.EMPLOYEE_ID)
+FROM DEPARTMENTS d 
+INNER JOIN EMPLOYEES e 
+ON d.DEPARTMENT_ID = e.DEPARTMENT_ID
+GROUP BY d.DEPARTMENT_ID ,d.DEPARTMENT_NAME;
+
+
+
+
+
+
+
+-- 접근경로별 고객수
+-- CHANNELS, SALES
+SELECT c.CHANNEL_ID, c.CHANNEL_DESC ,
+COUNT(s.CUST_ID)
+FROM SALES s , CHANNELS c 
+WHERE s.CHANNEL_ID = c.CHANNEL_ID 
+GROUP BY c.CHANNEL_ID, c.CHANNEL_DESC ;
+
+
+
+SELECT e.EMP_NAME , d.DEPARTMENT_NAME ,
+j.JOB_TITLE 
+FROM EMPLOYEES e 
+------------------------------------------
+INNER JOIN DEPARTMENTS d 
+ON (e.DEPARTMENT_ID = d.DEPARTMENT_ID)
+------------------------------------------
+INNER JOIN JOBS j 
+ON (e.JOB_ID = j.JOB_ID);
+
+
+
+-- 구문법 작성
+-- 불필요한 INNER 어쩌구가 없기에 편함
+SELECT e.EMP_NAME , d.DEPARTMENT_NAME ,
+j.JOB_TITLE 
+FROM EMPLOYEES e, DEPARTMENTS d , JOBS j 
+------------------------------------------
+WHERE (e.DEPARTMENT_ID = d.DEPARTMENT_ID)
+------------------------------------------
+AND (e.JOB_ID = j.JOB_ID)
+------------------------------------------
+AND e.SALARY > 5000
+
+
+
+
+
+
+
+--3개짜리
+SELECT cm.CUST_NAME , ct.COUNTRY_NAME,
+s.PROD_ID 
+FROM CUSTOMERS cm , SALES s , COUNTRIES ct
+WHERE cm.COUNTRY_ID = ct.COUNTRY_ID 
+AND s.CUST_ID = cm.CUST_ID;
+
+-- 4개짜리
+SELECT ct.COUNTRY_NAME , cm.CUST_NAME , 
+s.SALES_DATE , p.PROD_NAME 
+FROM CUSTOMERS cm , SALES s ,
+COUNTRIES ct, PRODUCTS p 
+WHERE cm.COUNTRY_ID = ct.COUNTRY_ID 
+AND s.CUST_ID = cm.CUST_ID
+AND s.PROD_ID = p.PROD_ID ;
+
+
+-- 앞으로의 중점은 
+-- 주어진 테이블 명세를 보고
+-- 어떤 컬럼을 사용하여 결합할지를 봐야함
+
+
+
+-- 테이블은 명세
+
+
+-- 국가별 판매수량 
+-- SALES, CUSTOMERS, COUNTRIES
+-- COUNT(s.PROD_ID) 판매수량
+SELECT ct.COUNTRY_ID, ct.COUNTRY_NAME , COUNT(s.PROD_ID)
+FROM CUSTOMERS c , SALES s , COUNTRIES ct
+WHERE c.CUST_ID = s.CUST_ID 
+AND ct.COUNTRY_ID = c.COUNTRY_ID
+GROUP BY ct.COUNTRY_ID, ct.COUNTRY_NAME;
+
+
+
+
+
+
+-- 접근경로별 판매 고객수,  
+-- 실적금액(AMOUNT_SOLD), 고객수 COUNT(s.CUST_ID)
+-- 환율 1340, 물가환산없음
+-- CHANNELS, SALES
+SELECT c.CHANNEL_ID , c.CHANNEL_DESC , 
+COUNT(s.CUST_ID) AS "고객수",
+TO_CHAR((SUM(s.AMOUNT_SOLD) * 1340 / 1000000), '999,999,999') AS "실적금액 (단위 : 백만원)"
+FROM CHANNELS c , SALES s , PRODUCTS p 
+WHERE s.CHANNEL_ID = c.CHANNEL_ID 
+AND s.PROD_ID = p.PROD_ID 
+GROUP BY c.CHANNEL_ID , c.CHANNEL_DESC;
+
+
+
+
+
+
+
+
+-- 부하직원수 EMPLOYEES
+
+
+
+
+
+SELECT m.EMPLOYEE_ID AS "상관ID",
+m.EMP_NAME AS "상관이름",
+COUNT(e.EMPLOYEE_ID) AS "부하직원수"
+FROM EMPLOYEES e , EMPLOYEES m
+WHERE e.MANAGER_ID = m.EMPLOYEE_ID
+GROUP BY m.EMPLOYEE_ID, m.EMP_NAME
+ORDER BY "상관ID" ASC;
+
+
+
+
+
+
+-- 하위부서의 갯수
+-- DEPARTMENTS 2개 필요
+-- 본 부서명, COUNT(하위부서갯수)
+SELECT p.DEPARTMENT_ID AS "상위부서ID",
+p.DEPARTMENT_NAME AS "상위부서",
+COUNT(d.DEPARTMENT_ID) AS "하위부서수"
+FROM DEPARTMENTS d , DEPARTMENTS p
+WHERE d.PARENT_ID = p.DEPARTMENT_ID 
+GROUP BY p.DEPARTMENT_ID , p.DEPARTMENT_NAME;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+-- 본인이름, 상관이름, 또 그 상관의 이름
+SELECT e.EMP_NAME AS "본인이름", m.EMP_NAME AS "상관이름",
+s.EMP_NAME AS "또 그 상관의 이름"
+FROM EMPLOYEES e , EMPLOYEES m, EMPLOYEES s
+WHERE e.MANAGER_ID = m.EMPLOYEE_ID
+AND m.MANAGER_ID = s.EMPLOYEE_ID ;
+
+
+
+
+
+
+
+
+
