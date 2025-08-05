@@ -18,7 +18,7 @@ FROM EMPLOYEES e ;
 SELECT MIN(e.SALARY) AS "최솟값", MAX(e.SALARY) AS "최댓값"
 FROM EMPLOYEES e ;
 
-
+-- [연습문제]
 -- 연봉이 2000~3000에 해당 되는 사원수
 SELECT COUNT(e.EMPLOYEE_ID) AS "사원수"
 FROM EMPLOYEES e 
@@ -28,7 +28,7 @@ WHERE e.SALARY BETWEEN 2000 AND 3000;
 
 
 
-
+-- [연습문제]
 -- EMPLOYEES에서 근속일이 5000~7000일에 해당 되는 사람들의 수
 -- HIRE_DATE
 SELECT COUNT(e.EMPLOYEE_ID) AS "사원수"
@@ -67,7 +67,7 @@ GROUP BY e.DEPARTMENT_ID ;
 
 
 
-
+-- [연습문제]
 -- EMPLOYEES에서
 -- SALARY부서별 최소 최대 
 -- DEPARTMENT_ID
@@ -93,7 +93,7 @@ HAVING AVG(e.SALARY) > 8000;
 
 
 
-
+-- [연습문제]
 -- EMPLOYEES에서
 -- EMP_NAME에 'e'가 포함되고
 -- MANAGER_ID별 평균연봉이 8000이상
@@ -108,7 +108,7 @@ HAVING  AVG(e.SALARY) > 8000;
 
 
 
-
+-- [연습문제]
 --EMPLOYEES에서
 --다음과 같이 출력하시오.
 
@@ -121,7 +121,7 @@ GROUP BY e.SALARY;
 
 
 
-
+-- [연습문제]
 --EMPLOYEES에서
 --다음과 같이 사원수가 짝수인 것만 출력하시오.
 
@@ -134,7 +134,7 @@ HAVING MOD(COUNT(e.EMPLOYEE_ID), 2) = 0;
 
 
 
-
+-- [연습문제]
 -- COUNTRIES에서 
 -- COUNTRY_SUBREGION_ID 대륙ID, COUNTRY_SUBREGION 대륙명
 -- COUNTRY_ID -- 나라 ID  COUNTRY_ID를 카운트하면 됨
@@ -149,7 +149,7 @@ GROUP BY c.COUNTRY_SUBREGION_ID ,c.COUNTRY_SUBREGION ;
 
 
 
-
+-- [연습문제]
 -- PRODUCTS
 -- 제품군별 평균가 출력 환율 1330
 
@@ -172,7 +172,7 @@ ORDER BY p.PROD_CATEGORY_ID;
 -- 판매된 금액인 AMOUNT_SOLD를 전부 합하면 그것이 매출액
 -- SUM 함수 사용하면 됨
 
-
+-- [연습문제]
 SELECT (TO_CHAR(s.SALES_DATE, 'MM')) AS "월별",
 SUM(s.AMOUNT_SOLD) AS "매출액"
 FROM SALES s 
@@ -182,7 +182,7 @@ ORDER BY "월별" ASC;
 
 
 
-
+-- [연습문제]
 -- SALES
 -- [사용할 컬럼정보] SALES_DATE, SUM(AMOUNT_SOLD)
 -- 6,7,8 월별 매출액, 6~8월간만
@@ -198,7 +198,7 @@ GROUP BY TO_CHAR(s.SALES_DATE, 'mm');
 
 
 
-
+-- [연습문제]
 -- SALES 사원별 총판매실적 
 -- [사용할 컬럼정보] EMPLOYEE_ID, AMOUNT_SOLD
 -- 출력조건 (사번, 총판매실적)
@@ -214,7 +214,7 @@ ORDER BY s.EMPLOYEE_ID;
 
 
 
-
+-- [연습문제]
 -- EMPLOYEES에서 EMP_NAME 길이별 수
 SELECT LENGTH(e.EMP_NAME) AS "이름 길이", 
 COUNT(e.EMPLOYEE_ID) AS "길이가 같은 사람의 수"
@@ -224,7 +224,7 @@ GROUP BY LENGTH(e.EMP_NAME)
 ORDER BY LENGTH(e.EMP_NAME);
 
 
-
+-- [연습문제]
 -- EMPLOYEES에서 EMP_NAME의 뒷부분 길이별 수
 -- 공백 여러개인 것 무시
 
