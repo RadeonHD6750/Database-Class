@@ -221,18 +221,3 @@ FROM CUSTOMERS c
 WHERE (MOD(c.CUST_YEAR_OF_BIRTH, 400) = 0)
 OR (MOD(c.CUST_YEAR_OF_BIRTH, 4) = 0 
 AND MOD(c.CUST_YEAR_OF_BIRTH, 100) != 0);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
