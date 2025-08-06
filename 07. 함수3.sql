@@ -192,7 +192,7 @@ FROM DUAL;
 -- 이번달이 며칠 남았는지 알아내시오.
 -- 달력을 보고 하나하나 셈을 하여 알아내면 ㅇㅈ
 -- 대신 그 하나하나 세고 있는 모습을 보여야함
-SELECT TO_CHAR(LAST_DAY(sysdate), 'DD') - TO_CHAR(sysdate, 'DD')
+SELECT ('이번달 ' || (TO_CHAR(LAST_DAY(sysdate), 'DD') - TO_CHAR(sysdate, 'DD')) || '일 남았습니다.') AS "이번달"
 FROM DUAL;
 
 
@@ -200,7 +200,7 @@ FROM DUAL;
 -- 올해 며칠 남았는지 알아내시오.
 -- 달력을 보고 하나하나 셈을 하여 알아내면 ㅇㅈ
 -- 대신 그 하나하나 세고 있는 모습을 보여야함
-SELECT 365 - TO_CHAR(sysdate, 'DDD')
+SELECT ('올해 ' || (365 - TO_CHAR(sysdate, 'DDD')) || '일 남았습니다. ') AS "올해 남은 일수"
 FROM DUAL;
 
 
