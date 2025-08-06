@@ -33,11 +33,6 @@ FROM EMPLOYEES e
 WHERE SYSDATE - e.HIRE_DATE BETWEEN 5000 AND 7000;
 
 
--- 집계함수만 나오고 있는데
--- 다른 컬럼이 나오고 싶으면 크림슨 발록에 해당되는
--- GROUP BY가 필요하다. 근데 너모 어려우니 당장은 ㅇㅇ
-
-
 -- EMPLOYEES의
 -- SALARY를 다음과 같이 출력하시오.
 SELECT VARIANCE(e.SALARY) AS "연봉 분산",
@@ -45,10 +40,44 @@ STDDEV(e.SALARY) AS "표준편차"
 FROM EMPLOYEES e ;
 
 
+--EMPLOYEES의
+--SALARY 총합계를 계산하여 연간 인건비를 구하시오
+SELECT SUM(e.SALARY) AS "연간 인건비"
+FROM EMPLOYEES e ;
+
+
+
+-- [연습문제]
+-- PRODUCT에서
+-- PROD_LIST_PRICE를 모두 합산하여 총 판매단가를 구하고
+-- PROD_LIST_PRICE의 평균 판매가를 구하시오.
+SELECT SUM(p.PROD_LIST_PRICE) AS "총 판매단가",
+AVG(p.PROD_LIST_PRICE) AS "평균 판매가"
+FROM PRODUCTS p ;
 
 
 
 
+-- [연습문제]
+-- JOBS에서
+-- JOB_ID의 갯수를 파악하여 얼마나 많은 직책이 있는지 알아내시오
+SELECT COUNT( j.JOB_ID) AS "직책수"
+FROM JOBS j ;
+
+
+
+-- [연습문제]
+-- DEPARTMENTS에서
+-- DEPARTMENT_ID의 갯수를 파악하여 얼마나 많은 부서가 있는지 알아내시오
+SELECT COUNT( d.DEPARTMENT_ID) AS "부서수"
+FROM DEPARTMENTS d;
+
+
+
+
+-- 집계함수만 나오고 있는데
+-- 다른 컬럼이 나오고 싶으면 크림슨 발록에 해당되는
+-- GROUP BY가 필요하다
 -- 집계함수가 아닌 타 컬럼은 왜 안되는가
 SELECT AVG(e.SALARY), e.EMP_NAME 
 FROM EMPLOYEES e ;

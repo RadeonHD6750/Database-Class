@@ -186,6 +186,41 @@ FROM DUAL;
 
 
 
+--기억 복구용
+
+-- [연습문제]
+-- 이번달이 며칠 남았는지 알아내시오.
+-- 달력을 보고 하나하나 셈을 하여 알아내면 ㅇㅈ
+-- 대신 그 하나하나 세고 있는 모습을 보여야함
+SELECT TO_CHAR(LAST_DAY(sysdate), 'DD') - TO_CHAR(sysdate, 'DD')
+FROM DUAL;
+
+
+-- [연습문제]
+-- 올해 며칠 남았는지 알아내시오.
+-- 달력을 보고 하나하나 셈을 하여 알아내면 ㅇㅈ
+-- 대신 그 하나하나 세고 있는 모습을 보여야함
+SELECT 365 - TO_CHAR(sysdate, 'DDD')
+FROM DUAL;
+
+
+-- [연습문제]
+-- CUSTOMERS에서 100살 이상이 된 사람들 구하시오.
+-- CUST_YEAR_OF_BIRTH
+SELECT c.CUST_NAME, CUST_YEAR_OF_BIRTH AS "출생년도", (TO_CHAR(sysdate, 'YYYY') - c.CUST_YEAR_OF_BIRTH) AS "나이"
+FROM CUSTOMERS c
+WHERE  (TO_CHAR(sysdate, 'YYYY') - c.CUST_YEAR_OF_BIRTH) >= 100;
+
+
+
+-- [연습문제]
+-- CUSTOMERS에서 윤년에 탄생한 사람들을 출력하시오
+-- CUST_YEAR_OF_BIRTH NUMBER 타입
+SELECT c.CUST_NAME, c.CUST_YEAR_OF_BIRTH
+FROM CUSTOMERS c 
+WHERE (MOD(c.CUST_YEAR_OF_BIRTH, 400) = 0)
+OR (MOD(c.CUST_YEAR_OF_BIRTH, 4) = 0 
+AND MOD(c.CUST_YEAR_OF_BIRTH, 100) != 0);
 
 
 
