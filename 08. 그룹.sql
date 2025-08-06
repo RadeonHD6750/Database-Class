@@ -25,9 +25,6 @@ FROM EMPLOYEES e
 WHERE e.SALARY BETWEEN 2000 AND 3000;
 
 
-
-
-
 -- [연습문제]
 -- EMPLOYEES에서 근속일이 5000~7000일에 해당 되는 사람들의 수
 -- HIRE_DATE
