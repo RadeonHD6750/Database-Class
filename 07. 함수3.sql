@@ -61,9 +61,6 @@ FROM EMPLOYEES e ;
 -- HIRE_DATE로부터 지금 이 순간까지
 -- 근속일 수가 짝수인 사람
 
-
-
-
 -- 숫자형식으로 취급하여 하는 방법
 SELECT e.EMP_NAME , e.HIRE_DATE ,
 (SYSDATE - e.HIRE_DATE) AS "근속일"
@@ -94,13 +91,16 @@ FROM DUAL;
 SELECT SYSDATE AS "현재시간",
 TO_CHAR(SYSDATE, 'YYYY-MM-DD') AS "변환1",
 TO_CHAR(SYSDATE, 'YYYY-MM-DD HH24:MI:SS') AS "변환2",
-TO_CHAR(SYSDATE, 'MM') AS "변환3"
+TO_CHAR(SYSDATE, 'MM') AS "변환3",
+TO_CHAR(SYSDATE, 'DDD') AS "변환4"
 FROM DUAL;
 
 
 
 
 
+
+-- [연습문제]
 -- EMPLOYEES에서
 -- HIRE_DATE 3의 배수에 해당되는 달에 입사한 사람
 
@@ -109,11 +109,42 @@ FROM EMPLOYEES e
 WHERE MOD(TO_CHAR(e.HIRE_DATE , 'MM'), 3) = 0;
 
 
+-- [연습문제]
+-- 윤년인 해, 2월에 입사한 사람
+SELECT e.EMP_NAME , (e.HIRE_DATE) AS "입사날", 
+LAST_DAY(e.HIRE_DATE )
+FROM EMPLOYEES e
+WHERE TO_CHAR(LAST_DAY(e.HIRE_DATE) , 'mm-dd') = '02-29';
+
+
+
+-- [연습문제]
+-- 연도, 월 상관없이 10일부터 20일 사이에 입사한 사람
+SELECT e.EMP_NAME , (e.HIRE_DATE) AS "입사날"
+FROM EMPLOYEES e
+WHERE TO_CHAR(e.HIRE_DATE , 'dd')BETWEEN 10 AND 20;
+
+
+
+-- [연습문제]
+-- 겨울인 월에 입사한 사람
+SELECT e.EMP_NAME , (e.HIRE_DATE) AS "입사날"
+FROM EMPLOYEES e
+WHERE TO_CHAR(e.HIRE_DATE , 'MM') IN (12, 1, 2);
+
+
 -- 숫자 변환
 -- 변환은 맞는데 사실상 출력형식 지정
 SELECT TO_CHAR(123456789, '999,999,999') AS "우리나라 방식",
 TO_CHAR(1234.56789, '999,999.999999') AS "소수점 다루기"
 FROM DUAL;
+
+
+
+
+
+
+
 
 -- 기본적으로 문자에서 숫자는 자동
 SELECT '123', TO_NUMBER('123')
