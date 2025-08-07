@@ -222,9 +222,62 @@ ORDER BY s.CHANNEL_ID ASC;
 
 
 
+-- [연습문제]
+--EMPLOYEES에서
+--다음과 같이 출력하시오.
+
+SELECT (e.SALARY || '를 받고 있는 사람은 ' || COUNT(e.EMPLOYEE_ID) || '명 입니다. ')AS "해당 연봉을 받는 사원수"
+FROM EMPLOYEES e 
+GROUP BY e.SALARY;
+
+-- [연습문제]
+-- EMPLOYEES에서
+-- MANAGER_ID별(같은 팀장을 두고 있는 사람들의) 평균연봉
+SELECT e.MANAGER_ID, AVG(e.SALARY) AS "평균연봉"
+FROM EMPLOYEES e 
+GROUP BY e.MANAGER_ID
+ORDER BY e.MANAGER_ID ;
 
 
+
+--------------------------------------
+-- 컬럼 여러개 묶기
+---------------------------------------
+-- 집계함수를 제외한 컬럼이 이제는 여러개
+-- 제각각이면 경우의 수로 뭉쳐기게 되어
+-- 잘 보고 결합할 것
+-- PRODUCTS
+SELECT p.PROD_CATEGORY_ID, p.PROD_CATEGORY,
+(SUM(p.PROD_LIST_PRICE)) AS "제품군별 총 판매가"
+FROM PRODUCTS p 
+GROUP BY p.PROD_CATEGORY_ID, p.PROD_CATEGORY
+ORDER BY p.PROD_CATEGORY_ID;
+
+
+-- [연습문제]
+-- COUNTRIES
+-- 대륙별 국가수
+-- 보통은 FK로 되어 다른 테이블에 존재함
+SELECT c.COUNTRY_REGION_ID, c.COUNTRY_REGION, COUNT(c.COUNTRY_ID) AS "국가수"
+FROM COUNTRIES c
+GROUP BY c.COUNTRY_REGION_ID, c.COUNTRY_REGION;
+
+
+-- [연습문제]
+-- COUNTRIES
+-- '상세' 대륙별 국가수
+-- 보통은 FK로 되어 다른 테이블에 존재함
+SELECT c.COUNTRY_SUBREGION_ID, c.COUNTRY_SUBREGION, COUNT(c.COUNTRY_ID) AS "국가수"
+FROM COUNTRIES c
+GROUP BY c.COUNTRY_SUBREGION_ID, c.COUNTRY_SUBREGION;
+
+
+
+
+--------------------------------------
 -- HAVING절 가즈아
+---------------------------------------
+
 
 -- 부서별 평균연봉
 SELECT e.DEPARTMENT_ID , AVG(e.SALARY)
@@ -240,28 +293,15 @@ HAVING AVG(e.SALARY) > 8000;
 -- [연습문제]
 -- EMPLOYEES에서
 -- EMP_NAME에 'e'가 포함되고
+-- 무조건 MANAGER_ID가 있어야 하며
 -- MANAGER_ID별 평균연봉이 8000이상
-SELECT e.MANAGER_ID , AVG(e.SALARY) AS "평균연봉"
+SELECT e.MANAGER_ID, AVG(e.SALARY) AS "평균연봉"
 FROM EMPLOYEES e 
 WHERE e.EMP_NAME LIKE '%e%'
+AND e.MANAGER_ID IS NOT NULL
 GROUP BY e.MANAGER_ID
-HAVING  AVG(e.SALARY) > 8000;
-
-
-
-
-
-
--- [연습문제]
---EMPLOYEES에서
---다음과 같이 출력하시오.
-
-SELECT (e.SALARY || '를 받고 있는 사람은 ' || COUNT(e.EMPLOYEE_ID) || '명 입니다. ')AS "해당 연봉을 받는 사원수"
-FROM EMPLOYEES e 
-GROUP BY e.SALARY;
-
-
-
+HAVING  AVG(e.SALARY) > 8000
+ORDER BY e.MANAGER_ID;
 
 
 
@@ -273,17 +313,6 @@ SELECT (e.SALARY || '를 받고 있는 사람은 ' || COUNT(e.EMPLOYEE_ID) || '�
 FROM EMPLOYEES e 
 GROUP BY e.SALARY
 HAVING MOD(COUNT(e.EMPLOYEE_ID), 2) = 0;
-
-
-
--- [연습문제]
--- PRODUCTS
--- 제품군별 평균가 출력 환율 1330
-SELECT p.PROD_CATEGORY_ID, p.PROD_CATEGORY,
-(AVG(p.PROD_LIST_PRICE) *1330) AS "평균가"
-FROM PRODUCTS p 
-GROUP BY p.PROD_CATEGORY_ID, p.PROD_CATEGORY
-ORDER BY p.PROD_CATEGORY_ID;
 
 
 
@@ -318,9 +347,6 @@ GROUP BY TO_CHAR(s.SALES_DATE, 'mm');
 
 
 
-
-
-
 -- [연습문제]
 -- SALES 사원별 총판매실적 
 -- [사용할 컬럼정보] EMPLOYEE_ID, AMOUNT_SOLD
@@ -342,9 +368,19 @@ ORDER BY s.EMPLOYEE_ID;
 SELECT LENGTH(e.EMP_NAME) AS "이름 길이", 
 COUNT(e.EMPLOYEE_ID) AS "길이가 같은 사람의 수"
 FROM EMPLOYEES e 
-WHERE e.EMPLOYEE_ID IS NOT NULL
 GROUP BY LENGTH(e.EMP_NAME)
 ORDER BY LENGTH(e.EMP_NAME);
+
+
+
+
+-- [연습문제]
+-- EMPLOYEES에서 PHONE_NUMBER 길이별 수
+SELECT LENGTH(e.PHONE_NUMBER ) AS "전화번호 길이", 
+COUNT(e.EMPLOYEE_ID) AS "길이가 같은 사람의 수"
+FROM EMPLOYEES e 
+GROUP BY LENGTH(e.PHONE_NUMBER )
+ORDER BY LENGTH(e.PHONE_NUMBER );
 
 
 -- [연습문제]
@@ -356,6 +392,26 @@ COUNT(e.EMPLOYEE_ID)
 FROM EMPLOYEES e
 GROUP BY LENGTH (SUBSTR(e.EMP_NAME, INSTR(e.EMP_NAME, ' ') + 1, LENGTH(e.EMP_NAME)))
 ORDER BY "가릴부분 길이";
+
+
+
+-- [연습문제]
+-- EMPLOYEES에서 EMP_NAME의 공백위치가 같은 사람들 수
+-- 공백 여러개인 것 무시
+SELECT INSTR(e.EMP_NAME, ' ') AS "공백위치",
+COUNT(e.EMPLOYEE_ID) AS "같은 사원수"
+FROM EMPLOYEES e
+GROUP BY INSTR(e.EMP_NAME, ' ')
+ORDER BY INSTR(e.EMP_NAME, ' ');
+
+
+
+
+
+
+
+
+
 
 
 

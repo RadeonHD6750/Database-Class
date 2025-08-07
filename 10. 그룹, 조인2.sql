@@ -1,5 +1,11 @@
 
+
+--------------------------------------
 -- JOIN하고 GROUP BY
+---------------------------------------
+
+
+-- [수업예제]
 -- 부서별 평균연봉
 SELECT d.DEPARTMENT_ID , d.DEPARTMENT_NAME,
 AVG(e.SALARY) 
@@ -12,7 +18,7 @@ GROUP BY d.DEPARTMENT_ID , d.DEPARTMENT_NAME;
 
 
 
-
+-- [연습문제]
 -- 직책별 사원수
 -- JOBS, EMPLOYEES
 SELECT j.JOB_ID, j.JOB_TITLE ,
@@ -28,10 +34,7 @@ GROUP BY j.JOB_ID, j.JOB_TITLE;
 SELECT e.EMP_NAME , j.JOB_ID, j.JOB_TITLE
 FROM JOBS j
 INNER JOIN EMPLOYEES e 
-ON (j.JOB_ID = e.JOB_ID)
-
-
-
+ON (j.JOB_ID = e.JOB_ID);
 
 
 --02. GROUP BY 생각 하기
@@ -51,15 +54,15 @@ WHERE e.JOB_ID IS NULL;
 
 
 
-
+-- [연습문제]
 -- 부서별 사원수
 -- DEPARTMENTS, EMPLOYEES
-SELECT d.DEPARTMENT_ID ,d.DEPARTMENT_NAME ,
+SELECT d.DEPARTMENT_ID ,d.DEPARTMENT_NAME, d.MANAGER_ID, 
 COUNT(e.EMPLOYEE_ID)
 FROM DEPARTMENTS d 
 INNER JOIN EMPLOYEES e 
 ON d.DEPARTMENT_ID = e.DEPARTMENT_ID
-GROUP BY d.DEPARTMENT_ID ,d.DEPARTMENT_NAME;
+GROUP BY d.DEPARTMENT_ID ,d.DEPARTMENT_NAME, d.MANAGER_ID;
 
 
 
@@ -67,6 +70,11 @@ GROUP BY d.DEPARTMENT_ID ,d.DEPARTMENT_NAME;
 
 
 
+
+
+
+
+-- [연습문제]
 -- 접근경로별 고객수
 -- CHANNELS, SALES
 SELECT c.CHANNEL_ID, c.CHANNEL_DESC ,
@@ -76,7 +84,23 @@ WHERE s.CHANNEL_ID = c.CHANNEL_ID
 GROUP BY c.CHANNEL_ID, c.CHANNEL_DESC ;
 
 
+-- [연습문제]
+-- 국가별 인구수
+SELECT ct.COUNTRY_ID , ct.COUNTRY_NAME , ct.COUNTRY_REGION ,
+COUNT(cu.CUST_ID )
+FROM COUNTRIES ct
+INNER JOIN CUSTOMERS cu
+ON ct.COUNTRY_ID = cu.COUNTRY_ID 
+GROUP BY ct.COUNTRY_ID , ct.COUNTRY_NAME , ct.COUNTRY_REGION ;
 
+
+
+--------------------------------------
+-- 테이블 여러개 붙이기
+---------------------------------------
+
+
+-- [수업예제]
 SELECT e.EMP_NAME , d.DEPARTMENT_NAME ,
 j.JOB_TITLE 
 FROM EMPLOYEES e 
@@ -88,7 +112,7 @@ INNER JOIN JOBS j
 ON (e.JOB_ID = j.JOB_ID);
 
 
-
+-- [수업예제]
 -- 구문법 작성
 -- 불필요한 INNER 어쩌구가 없기에 편함
 SELECT e.EMP_NAME , d.DEPARTMENT_NAME ,
@@ -99,24 +123,27 @@ WHERE (e.DEPARTMENT_ID = d.DEPARTMENT_ID)
 ------------------------------------------
 AND (e.JOB_ID = j.JOB_ID)
 ------------------------------------------
-AND e.SALARY > 5000
+AND e.SALARY > 5000;
 
 
 
-
-
-
-
+-- 앞으로의 중점은 
+-- 주어진 테이블 명세를 보고
+-- 어떤 컬럼을 사용하여 결합할지를 봐야함
+-- [수업예제]
 --3개짜리
-SELECT cm.CUST_NAME , ct.COUNTRY_NAME,
+SELECT cm.CUST_NAME , cm.CUST_STREET_ADDRESS, ct.COUNTRY_NAME,
 s.PROD_ID 
 FROM CUSTOMERS cm , SALES s , COUNTRIES ct
 WHERE cm.COUNTRY_ID = ct.COUNTRY_ID 
 AND s.CUST_ID = cm.CUST_ID;
 
+
+-- [연습문제]
 -- 4개짜리
+-- 판매국가, 구매자성명, 판매제품, 판매가, 판매일
 SELECT ct.COUNTRY_NAME , cm.CUST_NAME , 
-s.SALES_DATE , p.PROD_NAME 
+p.PROD_NAME, s.AMOUNT_SOLD, s.SALES_DATE 
 FROM CUSTOMERS cm , SALES s ,
 COUNTRIES ct, PRODUCTS p 
 WHERE cm.COUNTRY_ID = ct.COUNTRY_ID 
@@ -124,15 +151,70 @@ AND s.CUST_ID = cm.CUST_ID
 AND s.PROD_ID = p.PROD_ID ;
 
 
--- 앞으로의 중점은 
--- 주어진 테이블 명세를 보고
--- 어떤 컬럼을 사용하여 결합할지를 봐야함
+-- [연습문제]
+-- 5개짜리
+-- 판매국가, 구매자성명, 판매경로, 판매제품, 판매가, 판매일
+SELECT ct.COUNTRY_NAME , cm.CUST_NAME , ch.CHANNEL_DESC,
+p.PROD_NAME,s.AMOUNT_SOLD, s.SALES_DATE 
+FROM CUSTOMERS cm , SALES s ,
+COUNTRIES ct, PRODUCTS p, CHANNELS ch
+WHERE cm.COUNTRY_ID = ct.COUNTRY_ID 
+AND s.CUST_ID = cm.CUST_ID
+AND s.PROD_ID = p.PROD_ID 
+AND s.CHANNEL_ID = ch.CHANNEL_ID;
 
 
 
--- 테이블은 명세
+-- [연습문제]
+-- 6개짜리
+-- 판매국가, 구매자성명, 판매경로, 판매제품, 판매가, 판매사원, 판매일
+SELECT ct.COUNTRY_NAME , cm.CUST_NAME , ch.CHANNEL_DESC,
+p.PROD_NAME,s.AMOUNT_SOLD, e.emp_name, s.SALES_DATE 
+FROM CUSTOMERS cm , SALES s ,
+COUNTRIES ct, PRODUCTS p, CHANNELS ch, EMPLOYEES e
+WHERE cm.COUNTRY_ID = ct.COUNTRY_ID 
+AND s.CUST_ID = cm.CUST_ID
+AND s.PROD_ID = p.PROD_ID 
+AND s.CHANNEL_ID = ch.CHANNEL_ID
+AND s.EMPLOYEE_ID = e.EMPLOYEE_ID;
 
 
+-- [연습문제]
+-- 7개짜리
+-- 판매국가, 구매자성명, 판매경로, 판매제품, 판매가, 판매사원, 판매부서, 판매일
+SELECT ct.COUNTRY_NAME , cm.CUST_NAME , ch.CHANNEL_DESC,
+p.PROD_NAME,s.AMOUNT_SOLD, e.emp_name, d.DEPARTMENT_NAME, s.SALES_DATE 
+FROM CUSTOMERS cm , SALES s ,
+COUNTRIES ct, PRODUCTS p, CHANNELS ch, EMPLOYEES e,
+DEPARTMENTS d
+WHERE cm.COUNTRY_ID = ct.COUNTRY_ID 
+AND s.CUST_ID = cm.CUST_ID
+AND s.PROD_ID = p.PROD_ID 
+AND s.CHANNEL_ID = ch.CHANNEL_ID
+AND s.EMPLOYEE_ID = e.EMPLOYEE_ID
+AND e.DEPARTMENT_ID = d.DEPARTMENT_ID;
+
+
+-- [연습문제]
+-- 8개짜리
+-- 판매국가, 구매자성명, 판매경로, 판매제품, 판매가, 판매사원, 사원직책, 판매부서, 판매일
+SELECT ct.COUNTRY_NAME , cm.CUST_NAME , ch.CHANNEL_DESC,
+p.PROD_NAME, s.AMOUNT_SOLD,e.emp_name, j.JOB_TITLE, d.DEPARTMENT_NAME, s.SALES_DATE 
+FROM CUSTOMERS cm , SALES s ,
+COUNTRIES ct, PRODUCTS p, CHANNELS ch, EMPLOYEES e,
+DEPARTMENTS d, JOBS j
+WHERE cm.COUNTRY_ID = ct.COUNTRY_ID 
+AND s.CUST_ID = cm.CUST_ID
+AND s.PROD_ID = p.PROD_ID 
+AND s.CHANNEL_ID = ch.CHANNEL_ID
+AND s.EMPLOYEE_ID = e.EMPLOYEE_ID
+AND e.DEPARTMENT_ID = d.DEPARTMENT_ID
+AND e.JOB_ID = j.JOB_ID;
+
+
+
+
+-- [연습문제]
 -- 국가별 판매수량 
 -- SALES, CUSTOMERS, COUNTRIES
 -- COUNT(s.PROD_ID) 판매수량
@@ -146,7 +228,7 @@ GROUP BY ct.COUNTRY_ID, ct.COUNTRY_NAME;
 
 
 
-
+-- [연습문제]
 -- 접근경로별 판매 고객수,  
 -- 실적금액(AMOUNT_SOLD), 고객수 COUNT(s.CUST_ID)
 -- 환율 1340, 물가환산없음
@@ -165,13 +247,8 @@ GROUP BY c.CHANNEL_ID , c.CHANNEL_DESC;
 
 
 
-
+-- [연습문제]
 -- 부하직원수 EMPLOYEES
-
-
-
-
-
 SELECT m.EMPLOYEE_ID AS "상관ID",
 m.EMP_NAME AS "상관이름",
 COUNT(e.EMPLOYEE_ID) AS "부하직원수"
@@ -184,7 +261,7 @@ ORDER BY "상관ID" ASC;
 
 
 
-
+-- [연습문제]
 -- 하위부서의 갯수
 -- DEPARTMENTS 2개 필요
 -- 본 부서명, COUNT(하위부서갯수)
@@ -197,30 +274,11 @@ GROUP BY p.DEPARTMENT_ID , p.DEPARTMENT_NAME;
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
+-- [연습문제]
+-- SELF 조인
 -- 본인이름, 상관이름, 또 그 상관의 이름
 SELECT e.EMP_NAME AS "본인이름", m.EMP_NAME AS "상관이름",
 s.EMP_NAME AS "또 그 상관의 이름"
 FROM EMPLOYEES e , EMPLOYEES m, EMPLOYEES s
 WHERE e.MANAGER_ID = m.EMPLOYEE_ID
 AND m.MANAGER_ID = s.EMPLOYEE_ID ;
-
-
-
-
-
-
-
-
-

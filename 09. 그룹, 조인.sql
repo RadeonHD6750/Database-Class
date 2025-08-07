@@ -41,11 +41,14 @@ WHERE COUNTRY = '일본';
 
 
 
-
+---------------------------------------------------------
 -- 대망의 JOIN
+--------------------------------------------------------
 -- 사원들의 부서명
 -- 가장 기본적인 동등조인
 
+
+-- [수업예제]
 --옛 날 문법
 SELECT e.EMP_NAME , e.DEPARTMENT_ID  AS "emp 부서번호",
 d.DEPARTMENT_ID  AS "dept 부서번호",d.DEPARTMENT_NAME 
@@ -53,7 +56,7 @@ FROM EMPLOYEES e , DEPARTMENTS d
 WHERE e.DEPARTMENT_ID = d.DEPARTMENT_ID;
 
 
--- 오늘날 표준문법 85년도에 책정된듯 ㄹㅇ ㅇㅇ
+-- 오늘날 표준문법 
 SELECT e.EMP_NAME , e.DEPARTMENT_ID  AS "emp 부서번호",
 d.DEPARTMENT_ID  AS "dept 부서번호",d.DEPARTMENT_NAME 
 
@@ -73,15 +76,13 @@ ON (e.DEPARTMENT_ID = d.DEPARTMENT_ID);
 -- 이러한 귀찮은 과정을 하는 이유
 
 --01. 중복 데이터 방지
-
 --02. 데이터 일관성 유지
-
 --03. 유지보수
 
 
 
 
-
+-- [수업예제]
 -- 동등조인
 -- 판매된 제품명
 -- 동등조인
@@ -89,7 +90,7 @@ SELECT s.PROD_ID , p.PROD_NAME , s.SALES_DATE
 FROM SALES s , PRODUCTS p 
 WHERE s.PROD_ID = p.PROD_ID ;
 
-
+-- [수업예제]
 -- 동등 조인 INNER JOIN
 SELECT s.PROD_ID , p.PROD_NAME , s.SALES_DATE 
 FROM SALES s 
@@ -97,6 +98,7 @@ INNER JOIN PRODUCTS p
 ON (s.PROD_ID = p.PROD_ID);
 
 
+-- [수업예제]
 -- OUTER 조인
 -- 사원들의 부서명 출력하시오.
 -- 아니 그럼 부서가 없는 사람은 어카냐
@@ -106,30 +108,18 @@ FROM EMPLOYEES e
 LEFT JOIN DEPARTMENTS d 
 ON (e.DEPARTMENT_ID = d.DEPARTMENT_ID);
 
-
+-- [수업예제]
 SELECT e.EMP_NAME , d.DEPARTMENT_NAME 
 FROM EMPLOYEES e, DEPARTMENTS d 
 WHERE e.DEPARTMENT_ID = d.DEPARTMENT_ID (+);
 
 
 
-
+-- [연습문제]
 -- EMPLOYEES, JOBS
 -- 사원들의 직급명을 출력하시오.
--- 동등조인
+-- LEFT JOIN
 -- 옛 날 문법 or 표준문법 무관
-
-SELECT e.EMP_NAME , j.JOB_TITLE 
-FROM EMPLOYEES e
-INNER JOIN JOBS j 
-ON (e.JOB_ID = j.JOB_ID);
-
-
-
-
--- EMPLOYEES, JOBS
--- 사원들의 직급명을 출력하시오.
--- LEFT 조인
 
 SELECT e.EMP_NAME , j.JOB_TITLE 
 FROM EMPLOYEES e
@@ -146,7 +136,7 @@ WHERE e.JOB_ID = j.JOB_ID (+);
 
 
 
-
+-- [연습문제]
 -- 판매된 제품ID를 구매한 고객명
 -- SALES, CUSTOMERS 테이블 사용
 SELECT s.PROD_ID , c.CUST_NAME , s.SALES_DATE 
@@ -158,7 +148,7 @@ ON (s.CUST_ID = c.CUST_ID);
 
 
 
-
+-- [연습문제]
 -- CUSTOMERS
 -- COUNTRIES
 -- 고객들의 나라명
@@ -172,7 +162,7 @@ ON (cu.COUNTRY_ID = ct.COUNTRY_ID);
 
 
 
-
+-- [연습문제]
 -- SALES, CHANNELS
 -- 판매된 제품들의 접근경로
 SELECT s.CUST_ID , s.PROD_ID  , c.CHANNEL_DESC 
@@ -181,7 +171,7 @@ INNER JOIN CHANNELS c
 ON (s.CHANNEL_ID = c.CHANNEL_ID);
 
 
-
+-- [연습문제]
 -- EMPLOYEES만 사용
 -- 셀프조인
 -- LEFT JOIN 사용하면 됨 
@@ -189,8 +179,6 @@ SELECT e.EMP_NAME AS "본인이름", m.EMP_NAME AS "상관이름"
 FROM EMPLOYEES e 
 LEFT JOIN EMPLOYEES m
 ON e.MANAGER_ID = m.EMPLOYEE_ID ;
-
--- 카테고리 분류
 
 
 
