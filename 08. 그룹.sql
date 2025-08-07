@@ -73,6 +73,12 @@ SELECT COUNT( d.DEPARTMENT_ID) AS "부서수"
 FROM DEPARTMENTS d;
 
 
+-- [연습문제]
+-- SALES에서 판매된 금액인 AMOUNT_SOLD를 통하여
+-- 최종 매출액을 알아내시오.
+SELECT SUM(s.AMOUNT_SOLD ) AS "최종 매출액"
+FROM SALES s ;
+
 
 
 -- 집계함수만 나오고 있는데
@@ -101,6 +107,114 @@ SELECT e.DEPARTMENT_ID ,
 MIN(e.SALARY) AS "최소", MAX(e.SALARY) AS "최대"
 FROM EMPLOYEES e     
 GROUP BY e.DEPARTMENT_ID ;
+
+
+
+
+--부서별 평균연봉
+SELECT AVG(e.SALARY ), COUNT(e.EMPLOYEE_ID ), e.DEPARTMENT_ID
+FROM EMPLOYEES e 
+GROUP BY e.DEPARTMENT_ID;
+
+
+
+-- EMPLOYEES
+-- 같은 연봉(SALARY)을 받는 사원수
+SELECT e.SALARY, COUNT(e.EMPLOYEE_ID )  AS "사원수"
+FROM EMPLOYEES e 
+GROUP BY e.SALARY;
+
+
+
+
+
+-- [연습문제]
+-- EMPLOYEES에서
+-- 부서별 최소 최대 연봉
+-- DEPARTMENT_ID
+SELECT e.DEPARTMENT_ID ,
+MIN(e.SALARY) AS "최소", MAX(e.SALARY) AS "최대"
+FROM EMPLOYEES e     
+GROUP BY e.DEPARTMENT_ID
+ORDER BY e.DEPARTMENT_ID ASC;
+
+
+
+
+-- [연습문제]
+-- EMPLOYEES에서
+-- 직책별 JOB_ID 사원수
+
+
+SELECT e.JOB_ID , COUNT(e.EMPLOYEE_ID ) AS "사원수"
+FROM EMPLOYEES e
+GROUP BY e.JOB_ID
+ORDER BY "사원수" ASC;
+
+
+
+
+
+
+
+
+
+-- [연습문제]
+-- CUSTOMERS
+-- 국가별 고객수
+SELECT c.COUNTRY_ID AS "국가아이디", COUNT(c.CUST_ID) AS "고객수"
+FROM CUSTOMERS c 
+GROUP BY c.COUNTRY_ID;
+
+
+
+
+-- [연습문제]
+-- COUNTRIES
+-- 대륙별 국가수
+
+
+
+SELECT c.COUNTRY_REGION AS "대륙명", COUNT(c.COUNTRY_ID ) AS "국가수"
+FROM COUNTRIES c 
+GROUP BY c.COUNTRY_REGION;
+
+
+
+
+-- SALES
+-- 판매한 사원별 총 매출
+SELECT s.EMPLOYEE_ID AS "판매한 사원 번호", SUM(s.AMOUNT_SOLD) AS "총 매출"
+FROM SALES s 
+GROUP BY s.EMPLOYEE_ID;
+
+
+
+-- SALES
+-- 판매된 제품별 총매출액
+SELECT s.PROD_ID  AS "판매된 제품ID", SUM(s.AMOUNT_SOLD) AS "총 매출"
+FROM SALES s 
+GROUP BY s.PROD_ID 
+ORDER BY "총 매출" DESC;
+
+
+
+
+
+
+-- PRODUCTS
+-- 카테고리별 제품수
+
+SELECT p.PROD_CATEGORY AS "카테고리", COUNT(p.PROD_ID ) AS "제품수"
+FROM PRODUCTS p 
+GROUP BY p.PROD_CATEGORY
+ORDER BY "제품수" DESC;
+
+
+
+
+
+
 
 
 
