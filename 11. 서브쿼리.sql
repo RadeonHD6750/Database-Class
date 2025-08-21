@@ -330,3 +330,17 @@ AND s.AMOUNT_SOLD <
 )
 GROUP BY p.PROD_ID , p.PROD_NAME
 ORDER BY p.PROD_ID ASC;
+
+
+-- 페이지네이션
+EXPLAIN plan FOR
+SELECT * 
+FROM (
+        SELECT a.*, ROWNUM as rnum 
+        FROM (
+              			SELECT * 
+        				FROM EMPLOYEES e   
+        				ORDER BY e.EMPLOYEE_ID 
+        )  a
+)  
+WHERE rnum >= 1 and rnum <=3;   
