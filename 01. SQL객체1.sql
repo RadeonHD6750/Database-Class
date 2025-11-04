@@ -1,3 +1,11 @@
+-- 최초 작동확인 
+SELECT sysdate
+FROM dual;
+
+-- 사내 관리 DB
+-- hello world
+SELECT *
+FROM employees;
 
 
 -- 데이터를 담을 밥그릇 만들기
@@ -85,6 +93,18 @@ CREATE TABLE EX01_03(
 	create_date TIMESTAMP -- 가입일
 );
 
+
+
+-- 자동 형변환
+-- '' 이런거는 문자
+-- '1' 누가 봐도 숫자이면 DB가 알아서 숫자로 바꿈
+-- 걍 다 '' 이렇게 할건지
+
+-- 철학적 문제
+INSERT INTO ex01_01(co1, co2) 
+VALUES(1, 'jimin');
+INSERT INTO ex01_01(co1, co2) 
+VALUES('ㅇㅀㄹㅇㅎ', 1);
 
 
 -- EX01_03에 이름만 넣고 
@@ -189,7 +209,7 @@ INSERT INTO EX01_06(user_id, name, phone_number)
 VALUES('KM29A1', 'jimin', '010-1234-5678');
 
 
-
+----------------------------------------------------------------
 -- 각종 제약조건에 위해되지 않도록 하여
 -- 다음과 같이 데이터 입력하셈 ㄱㄱㄱ
 
@@ -207,6 +227,8 @@ FROM EX01_06;
 
 
 
+
+-----------------------------------------------------------------
 
 -- 정해진 데이터만 받겠다 CHECK
 CREATE TABLE EX01_07 (
@@ -314,7 +336,13 @@ VALUES(6, 'NF', 'SONATA', '대형');
 SELECT *
 FROM CAR;
 
+SELECT *
+FROM CAR;
 
+-- 정렬하기
+SELECT *
+FROM CAR
+ORDER BY SERIAL_NUMBER ASC;
 
 -- 이번에는 DEFAULT
 -- 굳이 입력하지 않아도 자동으로 입력해줌

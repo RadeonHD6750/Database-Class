@@ -170,7 +170,7 @@ FROM EMPLOYEES e ;
 -- 행번호 출력 
 -- 의사컬럼 중 하나 이며, 실존하는 컬럼은 아님
 SELECT e.EMP_NAME, ROWNUM
-FROM EMPLOYEES e
+FROM EMPLOYEES e;
 
 -- 행 마다 곂치지 않는 고유의 문자열 부여
 SELECT e.EMP_NAME, ROWID
@@ -283,6 +283,25 @@ SELECT p.PROD_CATEGORY, p.PROD_NAME
 FROM PRODUCTS p
 WHERE p.PROD_CATEGORY = 'Electronics'
 AND PROD_MIN_PRICE >= 100;
+
+-- 문자열 붙이기
+SELECT (e.EMP_NAME || '님 안녕하세요' || ' 밥 먹자') AS "인사하기"
+FROM EMPLOYEES e ;
+
+SELECT (e.SALARY || '달러' || e.EMAIL ) AS "연봉"
+FROM EMPLOYEES e ;
+
+-- [연습문제]
+-- EMPLOYEES에서 다음과 같이 출력하시오
+-- EMP_NAME, PHONE_NUMBER
+
+
+
+
+
+
+SELECT (e.EMP_NAME || '님 안녕하세요  ' || e.PHONE_NUMBER || '으로 전화주세요') AS "남긴 메세지" 
+FROM EMPLOYEES e ;
 
 
 
