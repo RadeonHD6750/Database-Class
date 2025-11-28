@@ -1,6 +1,10 @@
-
-
+--------------------------------------
 -- 그룹 시작
+---------------------------------------
+-- EMPLOYEES에 있는 사람들 수
+-- COUNT 해당 컬럼으로 따졌을 때 행 갯수
+SELECT EMPLOYEE_ID , EMP_NAME 
+FROM EMPLOYEES;
 
 -- 해당 컬럼에 있는 데이터 갯수
 SELECT COUNT(e.EMPLOYEE_ID)
@@ -18,6 +22,11 @@ FROM EMPLOYEES e ;
 SELECT MIN(e.SALARY) AS "최솟값", MAX(e.SALARY) AS "최댓값"
 FROM EMPLOYEES e ;
 
+-- 인건비 총합 - 월급 총합
+SELECT SUM(salary), VARIANCE(salary), STDDEV(salary)
+FROM EMPLOYEES;
+
+
 -- [연습문제]
 -- 연봉이 2000~3000에 해당 되는 사원수
 SELECT COUNT(e.EMPLOYEE_ID) AS "사원수"
@@ -33,18 +42,19 @@ FROM EMPLOYEES e
 WHERE SYSDATE - e.HIRE_DATE BETWEEN 5000 AND 7000;
 
 
+
+-- [연습문제]
 -- EMPLOYEES의
 -- SALARY를 다음과 같이 출력하시오.
 SELECT VARIANCE(e.SALARY) AS "연봉 분산",
 STDDEV(e.SALARY) AS "표준편차"
 FROM EMPLOYEES e ;
 
-
+-- [연습문제]
 --EMPLOYEES의
 --SALARY 총합계를 계산하여 연간 인건비를 구하시오
 SELECT SUM(e.SALARY) AS "연간 인건비"
 FROM EMPLOYEES e ;
-
 
 
 -- [연습문제]
@@ -79,6 +89,34 @@ FROM DEPARTMENTS d;
 SELECT SUM(s.AMOUNT_SOLD ) AS "최종 매출액"
 FROM SALES s ;
 
+-- [연습문제]
+-- SALES
+-- 판매한 사원별 총 매출
+SELECT s.EMPLOYEE_ID AS "판매한 사원 번호", SUM(s.AMOUNT_SOLD) AS "총 매출"
+FROM SALES s 
+GROUP BY s.EMPLOYEE_ID;
+
+
+-- [연습문제]
+-- SALES
+-- 판매된 제품별 총매출액
+SELECT s.PROD_ID  AS "판매된 제품ID", SUM(s.AMOUNT_SOLD) AS "총 매출"
+FROM SALES s 
+GROUP BY s.PROD_ID 
+ORDER BY "총 매출" DESC;
+
+
+-- [연습문제]
+-- PRODUCTS
+-- 카테고리별 제품수
+
+SELECT p.PROD_CATEGORY AS "카테고리", COUNT(p.PROD_ID ) AS "제품수"
+FROM PRODUCTS p 
+GROUP BY p.PROD_CATEGORY
+ORDER BY "제품수" DESC;
+
+
+
 
 
 -- 집계함수만 나오고 있는데
@@ -90,11 +128,27 @@ FROM EMPLOYEES e ;
 
 
 
+--------------------------------------
+-- GROUP BY
+---------------------------------------
 -- 부서별 평균연봉, 같은 부서끼리의 평균연봉
 -- 드디어 일반 컬럼 가능
 SELECT e.DEPARTMENT_ID , AVG(e.SALARY)
 FROM EMPLOYEES e 
 GROUP BY e.DEPARTMENT_ID ;
+
+--부서별 평균연봉
+SELECT AVG(e.SALARY ), COUNT(e.EMPLOYEE_ID ), e.DEPARTMENT_ID
+FROM EMPLOYEES e 
+GROUP BY e.DEPARTMENT_ID;
+
+
+-- EMPLOYEES
+-- 같은 연봉(SALARY)을 받는 사원수
+SELECT e.SALARY, COUNT(e.EMPLOYEE_ID )  AS "사원수"
+FROM EMPLOYEES e 
+GROUP BY e.SALARY;
+
 
 
 
@@ -109,20 +163,6 @@ FROM EMPLOYEES e
 GROUP BY e.DEPARTMENT_ID ;
 
 
-
-
---부서별 평균연봉
-SELECT AVG(e.SALARY ), COUNT(e.EMPLOYEE_ID ), e.DEPARTMENT_ID
-FROM EMPLOYEES e 
-GROUP BY e.DEPARTMENT_ID;
-
-
-
--- EMPLOYEES
--- 같은 연봉(SALARY)을 받는 사원수
-SELECT e.SALARY, COUNT(e.EMPLOYEE_ID )  AS "사원수"
-FROM EMPLOYEES e 
-GROUP BY e.SALARY;
 
 
 
@@ -144,8 +184,6 @@ ORDER BY e.DEPARTMENT_ID ASC;
 -- [연습문제]
 -- EMPLOYEES에서
 -- 직책별 JOB_ID 사원수
-
-
 SELECT e.JOB_ID , COUNT(e.EMPLOYEE_ID ) AS "사원수"
 FROM EMPLOYEES e
 GROUP BY e.JOB_ID
@@ -172,16 +210,13 @@ GROUP BY c.COUNTRY_ID;
 -- [연습문제]
 -- COUNTRIES
 -- 대륙별 국가수
-
-
-
 SELECT c.COUNTRY_REGION AS "대륙명", COUNT(c.COUNTRY_ID ) AS "국가수"
 FROM COUNTRIES c 
 GROUP BY c.COUNTRY_REGION;
 
 
 
-
+-- [연습문제]
 -- SALES
 -- 판매한 사원별 총 매출
 SELECT s.EMPLOYEE_ID AS "판매한 사원 번호", SUM(s.AMOUNT_SOLD) AS "총 매출"
@@ -189,7 +224,7 @@ FROM SALES s
 GROUP BY s.EMPLOYEE_ID;
 
 
-
+-- [연습문제]
 -- SALES
 -- 판매된 제품별 총매출액
 SELECT s.PROD_ID  AS "판매된 제품ID", SUM(s.AMOUNT_SOLD) AS "총 매출"
@@ -201,7 +236,7 @@ ORDER BY "총 매출" DESC;
 
 
 
-
+-- [연습문제]
 -- PRODUCTS
 -- 카테고리별 제품수
 
@@ -213,7 +248,7 @@ ORDER BY "제품수" DESC;
 
 
 
-
+-- [연습문제]
 -- 판매경로별 매출액
 SELECT s.CHANNEL_ID  AS "판매경로", SUM(s.AMOUNT_SOLD ) AS "매출액"
 FROM SALES s 
@@ -237,8 +272,6 @@ SELECT e.MANAGER_ID, AVG(e.SALARY) AS "평균연봉"
 FROM EMPLOYEES e 
 GROUP BY e.MANAGER_ID
 ORDER BY e.MANAGER_ID ;
-
-
 
 --------------------------------------
 -- 컬럼 여러개 묶기
@@ -273,7 +306,6 @@ GROUP BY c.COUNTRY_SUBREGION_ID, c.COUNTRY_SUBREGION;
 
 
 
-
 --------------------------------------
 -- HAVING절 가즈아
 ---------------------------------------
@@ -287,6 +319,23 @@ GROUP BY e.DEPARTMENT_ID
 HAVING AVG(e.SALARY) > 8000;
 
 
+-- HAVING -- 집계함수에 조건 걸 때
+-- 부서별 평균
+SELECT e.DEPARTMENT_ID, AVG(e.SALARY)
+FROM EMPLOYEES e 
+GROUP BY e.DEPARTMENT_ID
+HAVING AVG(e.SALARY) > 5000; -- 알맞은 사례
+
+
+-- [연습문제]
+-- EMPLOYEES
+-- EMP_NAME에 'e'가 포함되는 사람들 중에서
+-- MANAGER_ID별 평균연봉이 8000 넘어가는 거 조회
+SELECT e.MANAGER_ID, AVG(e.SALARY)
+FROM EMPLOYEES e
+WHERE e.EMP_NAME LIKE '%e%'
+GROUP BY e.MANAGER_ID
+HAVING AVG(e.SALARY) > 8000;
 
 
 
@@ -308,7 +357,6 @@ ORDER BY e.MANAGER_ID;
 -- [연습문제]
 --EMPLOYEES에서
 --다음과 같이 사원수가 짝수인 것만 출력하시오.
-
 SELECT (e.SALARY || '를 받고 있는 사람은 ' || COUNT(e.EMPLOYEE_ID) || '명 입니다. ') AS "해당 연봉을 받는 사원수"
 FROM EMPLOYEES e 
 GROUP BY e.SALARY
@@ -316,15 +364,30 @@ HAVING MOD(COUNT(e.EMPLOYEE_ID), 2) = 0;
 
 
 
+-- [연습문제]
+-- SALES 사원별 총판매실적 
+-- [사용할 컬럼정보] EMPLOYEE_ID, AMOUNT_SOLD
+-- 출력조건 (사번, 총판매실적)
+-- 합계 1400000달러 이상만
+-- 출력은 환율 1385 적용해서
+SELECT s.EMPLOYEE_ID , SUM(s.AMOUNT_SOLD) * 1385 AS "실적금액"
+FROM SALES s 
+GROUP BY s.EMPLOYEE_ID
+HAVING SUM(s.AMOUNT_SOLD)  >= 1400000
+ORDER BY s.EMPLOYEE_ID;
 
+
+--------------------------------------------------------
+------------- GROUP BY에 함수 사용하여 묶기 ---------------
+--------------------------------------------------------
+
+-- [연습문제]
 -- SALES테이블에서
 -- [사용할 컬럼정보] SALES_DATE, (AMOUNT_SOLD)
 -- 월별 매출액
 -- 출력조건 (월별, 매출액)
 -- 판매된 금액인 AMOUNT_SOLD를 전부 합하면 그것이 매출액
 -- SUM 함수 사용하면 됨
-
--- [연습문제]
 SELECT (TO_CHAR(s.SALES_DATE, 'MM')) AS "월별",
 SUM(s.AMOUNT_SOLD) AS "매출액"
 FROM SALES s 
@@ -343,21 +406,6 @@ SELECT TO_CHAR(s.SALES_DATE, 'mm') AS "월별", SUM(s.AMOUNT_SOLD) AS "매출액
 FROM SALES s 
 WHERE TO_CHAR(s.SALES_DATE, 'mm') BETWEEN 6 AND 8
 GROUP BY TO_CHAR(s.SALES_DATE, 'mm');
-
-
-
-
--- [연습문제]
--- SALES 사원별 총판매실적 
--- [사용할 컬럼정보] EMPLOYEE_ID, AMOUNT_SOLD
--- 출력조건 (사번, 총판매실적)
--- 합계 1400000달러 이상만
--- 출력은 환율 1385 적용해서
-SELECT s.EMPLOYEE_ID , SUM(s.AMOUNT_SOLD) * 1385 AS "실적금액"
-FROM SALES s 
-GROUP BY s.EMPLOYEE_ID
-HAVING SUM(s.AMOUNT_SOLD)  >= 1400000
-ORDER BY s.EMPLOYEE_ID;
 
 
 
@@ -403,55 +451,3 @@ COUNT(e.EMPLOYEE_ID) AS "같은 사원수"
 FROM EMPLOYEES e
 GROUP BY INSTR(e.EMP_NAME, ' ')
 ORDER BY INSTR(e.EMP_NAME, ' ');
-
-
-
-
-
-
-
-
-
-
-
-
--- 집합 연산자 중 UNION 살펴보기
-CREATE TABLE exp_goods_asia (
-       country VARCHAR2(10),
-       seq     NUMBER,
-       goods   VARCHAR2(80));
-      
-      
-INSERT INTO exp_goods_asia VALUES ('한국', 1, '원유제외 석유류');
-INSERT INTO exp_goods_asia VALUES ('한국', 2, '자동차');
-INSERT INTO exp_goods_asia VALUES ('한국', 3, '전자집적회로');
-INSERT INTO exp_goods_asia VALUES ('한국', 4, '선박');
-INSERT INTO exp_goods_asia VALUES ('한국', 5,  'LCD');
-INSERT INTO exp_goods_asia VALUES ('한국', 6,  '자동차부품');
-INSERT INTO exp_goods_asia VALUES ('한국', 7,  '휴대전화');
-INSERT INTO exp_goods_asia VALUES ('한국', 8,  '환식탄화수소');
-INSERT INTO exp_goods_asia VALUES ('한국', 9,  '무선송신기 디스플레이 부속품');
-INSERT INTO exp_goods_asia VALUES ('한국', 10,  '철 또는 비합금강');
-
-INSERT INTO exp_goods_asia VALUES ('일본', 1, '자동차');
-INSERT INTO exp_goods_asia VALUES ('일본', 2, '자동차부품');
-INSERT INTO exp_goods_asia VALUES ('일본', 3, '전자집적회로');
-INSERT INTO exp_goods_asia VALUES ('일본', 4, '선박');
-INSERT INTO exp_goods_asia VALUES ('일본', 5, '반도체웨이퍼');
-INSERT INTO exp_goods_asia VALUES ('일본', 6, '화물차');
-INSERT INTO exp_goods_asia VALUES ('일본', 7, '원유제외 석유류');
-INSERT INTO exp_goods_asia VALUES ('일본', 8, '건설기계');
-INSERT INTO exp_goods_asia VALUES ('일본', 9, '다이오드, 트랜지스터');
-INSERT INTO exp_goods_asia VALUES ('일본', 10, '기계류');
-
-
-
-SELECT goods
-  FROM exp_goods_asia
- WHERE country = '한국'
-UNION -- 양측 쿼리에서 중복제거하고 합하기
-SELECT goods
-  FROM exp_goods_asia
- WHERE country = '일본';
-
-
