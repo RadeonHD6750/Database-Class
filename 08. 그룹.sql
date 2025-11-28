@@ -305,78 +305,6 @@ FROM COUNTRIES c
 GROUP BY c.COUNTRY_SUBREGION_ID, c.COUNTRY_SUBREGION;
 
 
-
---------------------------------------
--- HAVING절 가즈아
----------------------------------------
-
-
--- 부서별 평균연봉
-SELECT e.DEPARTMENT_ID , AVG(e.SALARY)
-FROM EMPLOYEES e 
-WHERE AVG(e.SALARY) > 8000
-GROUP BY e.DEPARTMENT_ID 
-HAVING AVG(e.SALARY) > 8000;
-
-
--- HAVING -- 집계함수에 조건 걸 때
--- 부서별 평균
-SELECT e.DEPARTMENT_ID, AVG(e.SALARY)
-FROM EMPLOYEES e 
-GROUP BY e.DEPARTMENT_ID
-HAVING AVG(e.SALARY) > 5000; -- 알맞은 사례
-
-
--- [연습문제]
--- EMPLOYEES
--- EMP_NAME에 'e'가 포함되는 사람들 중에서
--- MANAGER_ID별 평균연봉이 8000 넘어가는 거 조회
-SELECT e.MANAGER_ID, AVG(e.SALARY)
-FROM EMPLOYEES e
-WHERE e.EMP_NAME LIKE '%e%'
-GROUP BY e.MANAGER_ID
-HAVING AVG(e.SALARY) > 8000;
-
-
-
--- [연습문제]
--- EMPLOYEES에서
--- EMP_NAME에 'e'가 포함되고
--- 무조건 MANAGER_ID가 있어야 하며
--- MANAGER_ID별 평균연봉이 8000이상
-SELECT e.MANAGER_ID, AVG(e.SALARY) AS "평균연봉"
-FROM EMPLOYEES e 
-WHERE e.EMP_NAME LIKE '%e%'
-AND e.MANAGER_ID IS NOT NULL
-GROUP BY e.MANAGER_ID
-HAVING  AVG(e.SALARY) > 8000
-ORDER BY e.MANAGER_ID;
-
-
-
--- [연습문제]
---EMPLOYEES에서
---다음과 같이 사원수가 짝수인 것만 출력하시오.
-SELECT (e.SALARY || '를 받고 있는 사람은 ' || COUNT(e.EMPLOYEE_ID) || '명 입니다. ') AS "해당 연봉을 받는 사원수"
-FROM EMPLOYEES e 
-GROUP BY e.SALARY
-HAVING MOD(COUNT(e.EMPLOYEE_ID), 2) = 0;
-
-
-
--- [연습문제]
--- SALES 사원별 총판매실적 
--- [사용할 컬럼정보] EMPLOYEE_ID, AMOUNT_SOLD
--- 출력조건 (사번, 총판매실적)
--- 합계 1400000달러 이상만
--- 출력은 환율 1385 적용해서
-SELECT s.EMPLOYEE_ID , SUM(s.AMOUNT_SOLD) * 1385 AS "실적금액"
-FROM SALES s 
-GROUP BY s.EMPLOYEE_ID
-HAVING SUM(s.AMOUNT_SOLD)  >= 1400000
-ORDER BY s.EMPLOYEE_ID;
-
-
 --------------------------------------------------------
 ------------- GROUP BY에 함수 사용하여 묶기 ---------------
 --------------------------------------------------------
@@ -451,3 +379,75 @@ COUNT(e.EMPLOYEE_ID) AS "같은 사원수"
 FROM EMPLOYEES e
 GROUP BY INSTR(e.EMP_NAME, ' ')
 ORDER BY INSTR(e.EMP_NAME, ' ');
+
+
+--------------------------------------
+-- HAVING절 가즈아
+---------------------------------------
+
+
+-- 부서별 평균연봉
+SELECT e.DEPARTMENT_ID , AVG(e.SALARY)
+FROM EMPLOYEES e 
+WHERE AVG(e.SALARY) > 8000
+GROUP BY e.DEPARTMENT_ID 
+HAVING AVG(e.SALARY) > 8000;
+
+
+-- HAVING -- 집계함수에 조건 걸 때
+-- 부서별 평균
+SELECT e.DEPARTMENT_ID, AVG(e.SALARY)
+FROM EMPLOYEES e 
+GROUP BY e.DEPARTMENT_ID
+HAVING AVG(e.SALARY) > 5000; -- 알맞은 사례
+
+
+-- [연습문제]
+-- EMPLOYEES
+-- EMP_NAME에 'e'가 포함되는 사람들 중에서
+-- MANAGER_ID별 평균연봉이 8000 넘어가는 거 조회
+SELECT e.MANAGER_ID, AVG(e.SALARY)
+FROM EMPLOYEES e
+WHERE e.EMP_NAME LIKE '%e%'
+GROUP BY e.MANAGER_ID
+HAVING AVG(e.SALARY) > 8000;
+
+
+
+-- [연습문제]
+-- EMPLOYEES에서
+-- EMP_NAME에 'e'가 포함되고
+-- 무조건 MANAGER_ID가 있어야 하며
+-- MANAGER_ID별 평균연봉이 8000이상
+SELECT e.MANAGER_ID, AVG(e.SALARY) AS "평균연봉"
+FROM EMPLOYEES e 
+WHERE e.EMP_NAME LIKE '%e%'
+AND e.MANAGER_ID IS NOT NULL
+GROUP BY e.MANAGER_ID
+HAVING  AVG(e.SALARY) > 8000
+ORDER BY e.MANAGER_ID;
+
+
+
+-- [연습문제]
+--EMPLOYEES에서
+--다음과 같이 사원수가 짝수인 것만 출력하시오.
+SELECT (e.SALARY || '를 받고 있는 사람은 ' || COUNT(e.EMPLOYEE_ID) || '명 입니다. ') AS "해당 연봉을 받는 사원수"
+FROM EMPLOYEES e 
+GROUP BY e.SALARY
+HAVING MOD(COUNT(e.EMPLOYEE_ID), 2) = 0;
+
+
+
+-- [연습문제]
+-- SALES 사원별 총판매실적 
+-- [사용할 컬럼정보] EMPLOYEE_ID, AMOUNT_SOLD
+-- 출력조건 (사번, 총판매실적)
+-- 합계 1400000달러 이상만
+-- 출력은 환율 1385 적용해서
+SELECT s.EMPLOYEE_ID , SUM(s.AMOUNT_SOLD) * 1385 AS "실적금액"
+FROM SALES s 
+GROUP BY s.EMPLOYEE_ID
+HAVING SUM(s.AMOUNT_SOLD)  >= 1400000
+ORDER BY s.EMPLOYEE_ID;
+
